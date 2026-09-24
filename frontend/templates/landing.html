@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Hero Section Styles */
+    .hero-section {
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+        padding: 6rem 2rem;
+        text-align: center;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .hero-btn {
+        display: inline-block;
+        background-color: var(--eci-blue);
+        color: white;
+        padding: 1.25rem 3.5rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 50px;
+        text-decoration: none;
+        box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
+        background-color: #1e40af;
+        /* Darker blue */
+        color: white;
+    }
+
+    /* Features Grid Styles */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        /* Force 2 columns */
+        gap: 3rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .feature-card {
+        padding: 2.5rem;
+        background: #f8fafc;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: left;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+        border-color: #cbd5e1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .features-grid {
+            grid-template-columns: 1fr;
+            /* Stack on mobile */
+            gap: 2rem;
+        }
+
+        .hero-section {
+            padding: 4rem 1.5rem;
+        }
+    }
+</style>
+
+<div>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div style="margin-bottom: 2rem; animation: fadeInDown 0.8s ease-out;">
+                <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    style="display: inline-block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+                    <circle cx="12" cy="12" r="10" stroke="var(--eci-blue)" stroke-width="2" fill="white" />
+                    <path d="M12 7V17M12 17L8 13M12 17L16 13" stroke="var(--eci-blue)" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+
+            <h1
+                style="font-size: 3.5rem; color: var(--text-dark); margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -1px; line-height: 1.1;">
+                Securing Democracy with <br>
+                <span style="color: var(--eci-blue);">Blockchain Technology</span>
+            </h1>
+
+            <p
+                style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 3rem; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                The official decentralized voting platform of the Election Commission.
+                Ensuring every vote is <strong style="color: var(--eci-orange);">Immutable</strong>, <strong
+                    style="color: #166534;">Transparent</strong>, and <strong
+                    style="color: var(--eci-blue);">Verifiable</strong>.
+            </p>
+
+            <div style="margin-bottom: 4rem;">
+                <a href="/eci-portal" class="hero-btn">
+                    Access Voter Services &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div style="padding: 5rem 2rem; background: white;">
+        <div class="container" style="max-width: 1200px;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-size: 2rem; color: var(--text-dark); margin-bottom: 1rem;">Why SecureVote?</h2>
+                <p style="color: var(--text-muted);">Built on next-generation cryptographic standards.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div
+                        style="width: 50px; height: 50px; background: #eff6ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--eci-blue); font-size: 1.5rem;">
+                        🔒
+                    </div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-dark);">Cryptographic
+                        Integrity</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">Using Elliptic Curve Cryptography (ECC) to
+                        sign every vote, ensuring it cannot be forged or altered.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div
+                        style="width: 50px; height: 50px; background: #fff7ed; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: var(--eci-orange); font-size: 1.5rem;">
+                        ⛓️
+                    </div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-dark);">Distributed Ledger
+                    </h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">Votes are stored in a decentralized
+                        blockchain, making the entire election process auditable by design.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div
+                        style="width: 50px; height: 50px; background: #f0fdf4; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #166534; font-size: 1.5rem;">
+                        🛡️
+                    </div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-dark);">Voter Anonymity</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">Your identity is verified, but your choice is
+                        sealed. The system proves <em>that</em> you voted, not <em>how</em>.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div
+                        style="width: 50px; height: 50px; background: #faf5ff; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #7e22ce; font-size: 1.5rem;">
+                        ⚡
+                    </div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--text-dark);">Instant Consensus
+                    </h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;">Real-time block mining and consensus allow
+                        for immediate, tamper-proof tallying of results.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Steps Section -->
+    <div style="padding: 5rem 2rem; background: #f1f5f9;">
+        <div class="container" style="max-width: 900px;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-size: 2rem; color: var(--text-dark); margin-bottom: 1rem;">How to Vote</h2>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                <div
+                    style="display: flex; gap: 2rem; align-items: center; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="font-size: 3rem; font-weight: 800; color: #e2e8f0;">01</div>
+                    <div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark);">Verify
+                            Registration</h4>
+                        <p style="color: var(--text-muted);">Use the "Find My ID" feature to confirm your presence on
+                            the Electoral Roll.</p>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; gap: 2rem; align-items: center; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="font-size: 3rem; font-weight: 800; color: #e2e8f0;">02</div>
+                    <div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark);">Authenticate</h4>
+                        <p style="color: var(--text-muted);">Login using your unique Voter ID. The system checks your
+                            eligibility in real-time.</p>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; gap: 2rem; align-items: center; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="font-size: 3rem; font-weight: 800; color: #e2e8f0;">03</div>
+                    <div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-dark);">Cast & Verify
+                        </h4>
+                        <p style="color: var(--text-muted);">Select your candidate and submit. You'll receive a
+                            cryptographic confirmation instantly.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

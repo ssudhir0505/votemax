@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container" style="max-width: 800px; margin: 2rem auto;">
+    <div class="auth-box"
+        style="background: white; padding: 2.5rem; border-radius: 12px; box-shadow: var(--shadow-md);">
+
+        <div class="form-header" style="text-align: center; margin-bottom: 2rem;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Election_Commission_of_India_logo.svg/1200px-Election_Commission_of_India_logo.svg.png"
+                alt="ECI Logo" style="height: 60px; margin-bottom: 1rem;">
+            <h2 style="color: var(--eci-blue); margin-bottom: 0.5rem;">Voter Registration (Form 6)</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                Application for inclusion of name in Electoral Roll for first-time voters.
+            </p>
+        </div>
+
+        <form action="{{ url_for('register') }}" method="post">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label
+                        style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-dark);">Full
+                        Name</label>
+                    <input type="text" name="full_name" required placeholder="As per Aadhaar/PAN"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;">
+                </div>
+
+                <div class="form-group">
+                    <label
+                        style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-dark);">Date
+                        of Birth</label>
+                    <input type="date" name="dob" required
+                        style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label
+                    style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-dark);">Permanent
+                    Address</label>
+                <textarea name="address" rows="3" required
+                    placeholder="House No, Street, Village/City, Post Office, Pin Code"
+                    style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit;"></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                <div class="form-group">
+                    <label
+                        style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-dark);">Mobile
+                        Number</label>
+                    <input type="tel" name="phone" required placeholder="+91 XXXXX XXXXX"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;">
+                </div>
+
+                <div class="form-group">
+                    <label
+                        style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-dark);">Email
+                        ID (Optional)</label>
+                    <input type="email" name="email" placeholder="example@email.com"
+                        style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;">
+                </div>
+            </div>
+
+            <div
+                style="margin-top: 2rem; background: #f8fafc; padding: 1rem; border-radius: 8px; font-size: 0.85rem; color: var(--text-muted);">
+                <strong>Declaration:</strong> I hereby declare that the details provided above are true to the best of
+                my knowledge. I understand that my application is subject to verification by the Election Commission.
+            </div>
+
+            <button type="submit" class="btn-primary"
+                style="width: 100%; margin-top: 2rem; padding: 1rem; font-size: 1.1rem; font-weight: 600;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    style="vertical-align: middle; margin-right: 8px;">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                Submit Application
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="{{ url_for('landing') }}" style="color: var(--eci-blue); text-decoration: none;">&larr; Back to
+                Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

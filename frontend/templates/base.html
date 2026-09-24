@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | ECI SecureVote</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="top-strip"></div>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="var(--eci-blue)" stroke-width="2" />
+                <path d="M12 7V17M12 17L8 13M12 17L16 13" stroke="var(--eci-blue)" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            ECI <span>SecureVote</span>
+        </a>
+        <div class="nav-links">
+            <a href="/eci-portal">ECI Portal</a>
+            <a href="/admin" style="color: var(--eci-orange); font-weight: 600;">Admin Portal</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer">
+        &copy; 2026 Election Commission of India - Secure Blockchain Portals. For demonstration purposes only.
+    </footer>
+    <script>
+        // Auto-hide flash messages after 2 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 500);
+                }, 2000); // Reverted to 2 seconds as requested
+            });
+        });
+
+        // Force page reload when using back/forward buttons (Cross-Browser Fix)
+        // With a 2-second delay to show the session warning before redirecting
+        window.addEventListener('pageshow', function (event) {
+            var historyTraversal = event.persisted ||
+                (typeof window.performance != "undefined" &&
+                    window.performance.navigation.type === 2);
+            if (historyTraversal) {
+                // Wait 2 seconds before reloading to allow user to read the message
+                setTimeout(function () {
+                    // If we are on the dashboard and hit back, escape the loop by going to portal
+                    if (window.location.pathname === '/voter') {
+                        window.location.href = '/eci-portal';
+                    } else {
+                        window.location.reload();
+                    }
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+
+</html>

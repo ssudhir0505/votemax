@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/console.css') }}">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div>
+        <h1 style="color: white; font-size: 1.75rem; margin-bottom: 0.25rem;">Node Debugger & Chain Console</h1>
+        <p style="color: #94a3b8; font-size: 0.875rem;">Full-state inspection of the integrated blockchain ledger.</p>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center;">
+        <a href="/api/system_state" target="_blank" class="btn"
+            style="background: #10b981; color: white; border: none; font-size: 0.8rem;">View Pure Raw JSON (Browser
+            DevTools)</a>
+        <a href="/admin" class="btn" style="background: #334155; color: white; border: none;">Exit Console</a>
+    </div>
+</div>
+
+<div class="console-layout">
+    <!-- Sidebar -->
+    <div class="console-sidebar">
+        <h3>Memory Pool (Unmined)</h3>
+        <div id="pending-pool" style="margin-bottom: 2rem;">
+            <div style="padding: 1rem; color: #475569; font-size: 0.8rem; text-align: center;">Memory pool empty</div>
+        </div>
+        <button onclick="forceMine()" id="mine-btn"
+            style="width: 100%; padding: 0.75rem; background: #fbbf24; color: #0f172a; border: none; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; margin-bottom: 2rem; display: none;">Manual
+            Override: Mine Block</button>
+
+        <h3>Voter Registry</h3>
+        <div id="voter-tree" style="margin-bottom: 2rem;">
+            <!-- Populated via JS -->
+        </div>
+
+        <h3>Ledger Structure</h3>
+        <div id="block-tree">
+            <!-- Populated via JS -->
+            <div style="padding: 1rem; color: #475569; font-size: 0.8rem; text-align: center;">Loading nodes...</div>
+        </div>
+    </div>
+
+    <!-- Main Editor -->
+    <div class="console-editor">
+        <div class="editor-toolbar">
+            <div class="editor-status">
+                <span id="node-status" style="color: #4ade80;">●</span> NODE_INTEGRATED (State: FULL_SYSTEM)
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span style="color: #94a3b8; font-size: 0.75rem;">Sync: <span id="block-count"
+                        style="color: white;">0</span> blks / <span id="voter-count" style="color: white;">0</span>
+                    vtrs</span>
+                <button onclick="refreshChain()"
+                    style="background: none; border: 1px solid #334155; color: #94a3b8; padding: 0.25rem 0.5rem; font-size: 0.75rem; cursor: pointer; border-radius: 4px;">Refresh
+                    State</button>
+            </div>
+        </div>
+        <div id="json-viewer">
+            <!-- Fills with raw JSON -->
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/console.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="admin-header">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="color: var(--eci-blue);">Election Commission Admin Portal</h1>
+            <p style="color: var(--text-muted);">Voter Approval & Ledger Audit System</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="/admin/console" class="btn"
+                style="background: #1e293b; color: white; border: none; font-size: 0.9rem;">
+                Open Developer Console (JSON)
+            </a>
+            <a href="{{ url_for('admin_logout') }}" class="btn"
+                style="background: #ef4444; color: white; border: none; font-size: 0.9rem;">
+                Logout
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 1. PENDING APPROVALS (Priority Action) -->
+<div class="admin-section">
+    <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+        Pending Voter Applications (Form 6)
+    </h2>
+
+    {% if pending_requests %}
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Applicant Name</th>
+                    <th>Date of Birth</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in pending_requests %}
+                <tr>
+                    <td style="font-weight: 600;">{{ req.full_name }}</td>
+                    <td>{{ req.dob }}</td>
+                    <td style="font-size: 0.9rem; color: var(--text-muted); max-width: 250px;">{{ req.address }}</td>
+                    <td>{{ req.phone }}</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{{ url_for('approve_voter', req_id=req.id) }}" class="btn"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background: #10b981; color: white; border: none;">
+                                Approve & Generate ID
+                            </a>
+                            <a href="{{ url_for('reject_voter', req_id=req.id) }}" class="btn"
+                                style="padding: 0.4rem 0.8rem; font-size: 0.8rem; background: #ef4444; color: white; border: none;">
+                                Reject
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="card"
+        style="padding: 2rem; text-align: center; color: var(--text-muted); background: #f8fafc; border: 1px dashed var(--border);">
+        No pending applications. All caught up!
+    </div>
+    {% endif %}
+</div>
+
+<!-- 2. OFFLINE / MANUAL ENTRY -->
+<div class="admin-section">
+    <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+        Offline Voter Entry (Manual Registration)
+    </h2>
+    <div class="card">
+        <form action="{{ url_for('admin') }}" method="post"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
+            <div class="form-group">
+                <label style="font-size: 0.85rem; font-weight: 600;">Full Name</label>
+                <input type="text" name="full_name" required placeholder="Name"
+                    style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
+            </div>
+            <div class="form-group">
+                <label style="font-size: 0.85rem; font-weight: 600;">DOB</label>
+                <input type="date" name="dob" required
+                    style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
+            </div>
+            <div class="form-group">
+                <label style="font-size: 0.85rem; font-weight: 600;">Address</label>
+                <input type="text" name="address" required placeholder="City/Village"
+                    style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
+            </div>
+            <div class="form-group">
+                <label style="font-size: 0.85rem; font-weight: 600;">Phone</label>
+                <input type="tel" name="phone" required placeholder="Contact"
+                    style="width: 100%; padding: 0.6rem; border: 1px solid var(--border); border-radius: 6px;">
+            </div>
+            <button type="submit" class="btn-primary" style="padding: 0.6rem 1rem; font-size: 0.9rem;">
+                + Add & Approve Instantly
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- 3. LIVE RESULTS -->
+<div class="admin-section">
+    <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+        Live Election Results
+    </h2>
+    <div class="card results-box">
+        <div class="chart-container" style="height: 300px;">
+            <canvas id="resultsChart"></canvas>
+        </div>
+        <div style="margin-top: 1.5rem; display: flex; gap: 2rem; justify-content: center;">
+            {% for party in political_parties %}
+            <div class="party-item"
+                style="border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; min-width: 120px; text-align: center;">
+                <span style="display: block; font-weight: 500; font-size: 0.8rem; color: var(--text-muted);">{{ party
+                    }}</span>
+                <span style="display: block; font-weight: 800; color: var(--eci-blue); font-size: 1.2rem;">{{
+                    vote_gain.count(party) }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- 4. AUDIT LOG -->
+<div class="admin-section">
+    <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        Cryptographic Audit Log
+    </h2>
+    <div class="card" style="padding: 0; overflow: hidden; max-height: 400px; overflow-y: auto;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Voter Trace</th>
+                    <th>Selection</th>
+                    <th>Timestamp</th>
+                    <th>Tx Identifier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr>
+                    <td>
+                        <span
+                            class="status-pill {% if post.index == 'Pending' %}status-pending{% else %}status-confirmed{% endif %}">
+                            {{ 'Confirmed (#' ~ post.index ~ ')' if post.index != 'Pending' else 'Pending' }}
+                        </span>
+                    </td>
+                    <td><code
+                            style="background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px;">{{ post.voter_id }}</code>
+                    </td>
+                    <td style="font-weight: 600;">{{ post.party }}</td>
+                    <td>{{ readable_time(post.timestamp).strftime('%H:%M:%S') }}</td>
+                    <td class="hash-cell">{{ post.tx_id[:12] }}...</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 5. VOTER REGISTRY -->
+<div class="admin-section">
+    <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+        </svg>
+        Registered Voters Registry
+    </h2>
+    <div class="card" style="padding: 0; overflow: hidden; max-height: 400px; overflow-y: auto;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Voter ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>DOB</th>
+                    <th>Voting Status</th>
+                    <th>Public Key (Truncated)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for voter in voters %}
+                <tr>
+                    <td><strong>{{ voter.voter_id }}</strong></td>
+                    <td>{{ voter.full_name }}</td>
+                    <td>{{ voter.phone }}</td>
+                    <td>{{ voter.dob }}</td>
+                    <td>
+                        <span class="status-badge {% if voter.has_voted %}voted-true{% else %}voted-false{% endif %}">
+                            {{ 'Voted' if voter.has_voted else 'Not Voted' }}
+                        </span>
+                    </td>
+                    <td class="hash-cell">{{ voter.public_key[:40] }}...</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Data for Chart.js -->
+<div id="chart-data" data-parties='{{ political_parties|tojson }}'
+    data-votes='[{% for party in political_parties %}{{ vote_gain.count(party) }}{% if not loop.last %},{% endif %}{% endfor %}]'
+    style="display: none;">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% endblock %}

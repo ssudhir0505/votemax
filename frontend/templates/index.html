@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="dashboard-header">
+	<div>
+		<h1 style="color: var(--eci-blue); font-size: 2rem;">General Election Dashboard 2026</h1>
+		<p style="color: var(--text-muted);">Secure Voting Terminal</p>
+	</div>
+	<div style="text-align: right;">
+		<span class="status-pill status-confirmed">Blockchain Active</span>
+	</div>
+</div>
+
+<div class="main-grid">
+
+	{% if vote_choice %}
+	<!-- VOTE CONFIRMATION SCREEN -->
+	<div class="card" style="margin: 0 auto; max-width: 600px; text-align: center; padding: 3rem;">
+		<div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+		<h2 style="color: #166534; margin-bottom: 0.5rem;">Vote Cast Successfully!</h2>
+		<p style="color: var(--text-muted); margin-bottom: 2rem;">Your vote has been cryptographically signed and
+			recorded.</p>
+
+		<div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+			<span style="display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">You voted
+				for</span>
+			<strong style="display: block; font-size: 1.5rem; color: var(--text-dark);">{{ vote_choice }}</strong>
+		</div>
+
+		<a href="/logout" class="btn"
+			style="background: #ef4444; color: white; padding: 1rem 2rem; font-size: 1.1rem; text-decoration: none; border-radius: 6px;">
+			Exit & Logout
+		</a>
+	</div>
+
+	{% else %}
+	<!-- BALLOT FORM -->
+	<div class="card ballot-box" style="margin: 0 auto; max-width: 600px;">
+		<h2 style="margin-bottom: 1rem; font-size: 1.25rem;">Electronic Ballot Paper</h2>
+		{% if voter_registered %}
+		<div
+			style="background-color: #f0fdf4; border: 1px solid #bbf7d0; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+			<p style="font-size: 0.875rem; margin-bottom: 0.5rem; color: #166534;">
+				<strong>Authenticated Voter Session</strong>
+			</p>
+			<p style="font-size: 0.875rem; color: #166534;">
+				Voter ID: <strong style="font-family: monospace;">{{ voter_id }}</strong>
+			</p>
+		</div>
+
+		<form action="/submit" method="post">
+			<div style="margin-bottom: 2rem;">
+				<label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Select
+					Candidate/Party</label>
+				<select name="party" required
+					style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var(--border); font-size: 1rem; background-color: white;">
+					<option value="">-- Choose Candidate --</option>
+					{% for party in political_parties %}
+					<option value="{{ party }}">{{ party }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<div
+				style="padding: 1rem; background-color: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; margin-bottom: 2rem; font-size: 0.75rem; color: #9a3412;">
+				<strong>Confidentiality Notice:</strong> Your vote is cryptographically signed. The system records that
+				you voted, but your choice is sealed in the blockchain.
+			</div>
+
+			<button type="submit" class="btn-vote" style="font-size: 1.1rem; padding: 1.25rem;">CONFIRM & CAST SECURE
+				VOTE</button>
+		</form>
+		{% else %}
+		<div style="padding: 3rem 2rem; text-align: center; background: #f9fafb; border-radius: 8px;">
+			<div style="font-size: 3rem; margin-bottom: 1rem;">🗳️</div>
+			<h3 style="margin-bottom: 0.5rem; color: var(--text-dark);">Authentication Required</h3>
+			<p style="margin-bottom: 2rem; color: var(--text-muted);">You must verify your Voter ID before accessing the
+				electronic ballot.</p>
+			<!-- Updated Link to Search Page for Login -->
+			<a href="/eci-portal" class="btn" style="padding: 0.75rem 2rem;">Proceed to Verification</a>
+		</div>
+		{% endif %}
+	</div>
+	{% endif %}
+</div>
+
+{% endblock %}

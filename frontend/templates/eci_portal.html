@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    @media print {
+        body {
+            visibility: hidden;
+        }
+
+        #voter-slip-wrapper {
+            visibility: visible;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        #voter-slip-wrapper * {
+            visibility: visible;
+        }
+
+        .print-btn-icon,
+        .navbar,
+        .footer {
+            display: none !important;
+        }
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        /* Reduced gap */
+        align-items: stretch;
+    }
+
+    @media (max-width: 768px) {
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .service-card {
+        padding: 1.5rem;
+        /* Reduced padding */
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        min-height: 250px;
+        /* Reduced min-height */
+        border: 1px solid var(--border);
+    }
+
+    .card-header {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    /* Smaller icon */
+    .card-title {
+        color: var(--text-dark);
+        font-size: 1.2rem;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+    }
+
+    .card-desc {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+    }
+
+    .card-form {
+        margin-top: auto;
+    }
+
+    /* Button container logic */
+
+    .form-input-group {
+        margin-bottom: 0.8rem;
+    }
+
+    /* Standard Input Style */
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    /* Modal Styles (Unchanged) */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 500px;
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container" style="max-width: 1000px; margin: 2rem auto;">
+
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="color: var(--eci-blue); font-size: 1.8rem; font-weight: 700;">Voter Services Portal</h2>
+    </div>
+
+    <div class="services-grid">
+
+        <!-- CONTAINER 1: View Voter Slip -->
+        <div class="service-card">
+            <div class="card-header">
+                <div class="card-icon">📄</div>
+                <h3 class="card-title">View Voter Slip</h3>
+                <p class="card-desc">Download your digital voter slip.</p>
+            </div>
+            <div class="card-form">
+                <form action="{{ url_for('view_slip') }}" method="post">
+                    <div class="form-input-group">
+                        <input type="text" name="voter_id" placeholder="Voter ID (e.g. CRYV#####)" required
+                            autocomplete="off" style="text-transform: uppercase; font-weight: 600;">
+                    </div>
+                    <button type="submit" class="btn-primary"
+                        style="width: 100%; background: var(--eci-blue); color: white; padding: 0.8rem;">
+                        Check Details
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTAINER 2: Find My Voter ID -->
+        <div class="service-card">
+            <div class="card-header">
+                <div class="card-icon">🔍</div>
+                <h3 class="card-title">Find My Voter ID</h3>
+                <p class="card-desc">Recover ID using mobile number.</p>
+            </div>
+            <div class="card-form">
+                {% if voter_id_result %}
+                <div
+                    style="background: #f0fdf4; border: 1px dashed #22c55e; padding: 1rem; border-radius: 8px; text-align: center; margin-bottom: 1rem;">
+                    <p style="font-size: 0.85rem; color: #15803d; margin-bottom: 0.5rem;">Voter ID Found:</p>
+                    <div style="font-size: 1.4rem; font-weight: 800; color: #15803d; font-family: monospace;">{{
+                        voter_id_result }}</div>
+                </div>
+                <div style="text-align: center; margin-top: auto;">
+                    <a href="{{ url_for('eci_portal') }}" class="btn-primary"
+                        style="display: block; width: 100%; background: var(--eci-blue); color: white; padding: 0.8rem; text-align: center; text-decoration: none;">Done
+                        / Search Again</a>
+                </div>
+                {% else %}
+                <form action="{{ url_for('find_voter_id') }}" method="post">
+                    <div class="form-input-group">
+                        <input type="tel" name="phone" placeholder="Mobile Number" autocomplete="off" required>
+                    </div>
+                    <!-- Combined or compact inputs -->
+                    <div class="form-input-group">
+                        <input type="date" name="dob" required>
+                    </div>
+                    <button type="submit" class="btn-primary"
+                        style="width: 100%; background: var(--eci-blue); color: white; padding: 0.8rem;">
+                        Search Record
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CONTAINER 3: E-Vote -->
+        <div class="service-card" style="border-top: 4px solid var(--eci-orange);">
+            <div class="card-header">
+                <div class="card-icon">🗳️</div>
+                <h3 class="card-title">Enter E-Vote</h3>
+                <p class="card-desc">Secure blockchain voting terminal.</p>
+            </div>
+            <div class="card-form">
+                <form action="{{ url_for('evote_login') }}" method="post">
+                    <div class="form-input-group" style="margin-bottom: 0.5rem;">
+                        <input type="text" name="voter_id" placeholder="Enter Voter ID" required autocomplete="off"
+                            style="text-transform: uppercase; font-weight: 600;">
+                    </div>
+                    <!-- Moved Note ABOVE button to fix alignment -->
+                    <div style="font-size: 0.75rem; color: #d97706; margin-bottom: 0.5rem; text-align: center;">
+                        ⚠️ One-time secure login
+                    </div>
+                    <button type="submit" class="btn-primary"
+                        style="width: 100%; background: var(--eci-blue); color: white; padding: 0.8rem;">
+                        Enter Ballot
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTAINER 4: Registration -->
+        <div class="service-card">
+            <div class="card-header">
+                <div class="card-icon">📝</div>
+                <h3 class="card-title">New Registration</h3>
+                <p class="card-desc">Submit Form 6 application online.</p>
+            </div>
+            <div class="card-form">
+                <!-- Spacer to match input height roughly -->
+                <div
+                    style="height: 54px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; background: #f8fafc; border-radius: 6px; border: 1px dashed #cbd5e1;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Not registered?</span>
+                </div>
+
+                <button onclick="openModal()" class="btn-primary"
+                    style="width: 100%; background: var(--eci-blue); color: white; padding: 0.8rem;">
+                    Register Now
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Voter Slip Display (Unchanged logic, just simplified CSS) -->
+    {% if voter_slip %}
+    <div id="voter-slip-wrapper" style="margin-top: 2rem;">
+        <div id="printable-slip" class="card"
+            style="padding: 1.5rem; border-left: 5px solid var(--eci-blue); position: relative;">
+            <div class="print-btn-icon" onclick="window.print()"
+                style="position: absolute; top: 1rem; right: 1rem; cursor: pointer;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+            </div>
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={{ voter_slip.voter_id }}"
+                    style="width: 100px; height: 100px; border: 1px solid #ddd; padding: 5px;">
+                <div>
+                    <h3 style="margin-bottom: 0.25rem;">{{ voter_slip.full_name }}</h3>
+                    <div style="color: var(--eci-blue); font-weight: 700; margin-bottom: 1rem;">{{ voter_slip.voter_id
+                        }}</div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; font-size: 0.9rem;">
+                        <div><span style="color:var(--text-muted); font-size:0.8rem;">DOB:</span> <strong>{{
+                                voter_slip.dob }}</strong></div>
+                        <div><span style="color:var(--text-muted); font-size:0.8rem;">Age:</span> <strong>{{
+                                voter_slip.age }}</strong></div>
+                        <div><span style="color:var(--text-muted); font-size:0.8rem;">Phone:</span> <strong>{{
+                                voter_slip.phone }}</strong></div>
+                        <div><span style="color:var(--text-muted); font-size:0.8rem;">Email:</span> <strong>{{
+                                voter_slip.email or '-' }}</strong></div>
+                        <div style="grid-column: span 2;"><span
+                                style="color:var(--text-muted); font-size:0.8rem;">Address:</span> <strong>{{
+                                voter_slip.address }}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Modal (Unchanged) -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 style="text-align: center; margin-bottom: 1rem; color: var(--eci-blue);">Form 6: New Voter</h3>
+            <form action="/register" method="POST">
+                <input type="text" name="full_name" placeholder="Full Name" required style="margin-bottom: 0.8rem;">
+                <input type="date" name="dob" required style="margin-bottom: 0.8rem;">
+                <input type="tel" name="phone" placeholder="Mobile Number" required style="margin-bottom: 0.8rem;">
+                <input type="email" name="email" placeholder="Email" required style="margin-bottom: 0.8rem;">
+                <textarea name="address" placeholder="Address" rows="3" required
+                    style="width: 100%; margin-bottom: 1rem; padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px;"></textarea>
+                <button type="submit" class="btn-primary"
+                    style="width: 100%; background: var(--eci-blue); color: white; padding: 1rem;">Submit
+                    Application</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() { document.getElementById('registerModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('registerModal').style.display = 'none'; }
+        window.onclick = function (event) { if (event.target == document.getElementById('registerModal')) closeModal(); }
+    </script>
+</div>
+{% endblock %}

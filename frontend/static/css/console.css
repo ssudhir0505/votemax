@@ -1,0 +1,112 @@
+body {
+    background-color: #0f172a;
+    /* Force dark background for console */
+}
+
+.console-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: calc(100vh - 120px);
+    background: #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #334155;
+}
+
+/* Sidebar / Tree View */
+.console-sidebar {
+    background: #0f172a;
+    border-right: 1px solid #334155;
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+}
+
+.console-sidebar h3 {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+}
+
+.block-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    color: #e2e8f0;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    transition: background 0.2s;
+}
+
+.block-link:hover {
+    background: #1e293b;
+}
+
+.block-link.active {
+    background: #334155;
+    color: #fbbf24;
+}
+
+/* Editor View */
+.console-editor {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.editor-toolbar {
+    background: #1e293b;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editor-status {
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+#json-viewer {
+    flex: 1;
+    background: #0f172a;
+    color: #fbbf24;
+    padding: 2rem;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+.json-key {
+    color: #f472b6;
+}
+
+.json-string {
+    color: #4ade80;
+}
+
+.json-number {
+    color: #60a5fa;
+}
+
+.json-boolean {
+    color: #a78bfa;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
